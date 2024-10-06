@@ -3,7 +3,7 @@ import Header from "./components/Header"
 import Home from "./pages/Home"
 import Compiler from "./pages/Compiler"
 import { ThemeProvider } from "./components/theme-provider"
-
+import { Toaster } from "sonner"
 function App() {
   return (
     <>
@@ -12,7 +12,9 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/compiler" element={<Compiler />} />
+          <Route path="/compiler/:id" element={<Compiler />} />
         </Routes>
+        <Toaster />
       </ThemeProvider>
     </>
   )
