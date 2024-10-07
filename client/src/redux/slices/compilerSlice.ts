@@ -2,15 +2,15 @@ import { CompilerSliceStateType } from "@/Types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState: CompilerSliceStateType = {
-    code: {
-        html:
-            `<div class="container">
+  code: {
+    html:
+      `<div class="container">
     <h1>Welcome to My Page</h1>
     <button onclick="changeBackgroundColor()">Change Background Color</button>
 </div>
         `,
-        css:
-            `body {
+    css:
+      `body {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -38,32 +38,34 @@ button {
 button:hover {
   background-color: #0056b3;
 }`,
-        javascript:
-            `function changeBackgroundColor() {
+    javascript:
+      `function changeBackgroundColor() {
   const colors = ["#ffcccc", "#ccffcc", "#ccccff", "#ffffcc", "#ffccff"];
   const randomColor = colors[Math.floor(Math.random() * colors.length)];
   document.body.style.backgroundColor = randomColor;
 }
 
         `
-    },
-    currentLanguage: "html",
+  },
+  currentLanguage: "html",
 }
 
 const compilerSlice = createSlice({
-    name: "compilerSlice",
-    initialState,
-    reducers: {
-        updateCurrentLanguage: (state, action: PayloadAction<CompilerSliceStateType["currentLanguage"]>) => {
-            state.currentLanguage = action.payload
-        },
-        updateCode: (state, action: PayloadAction<string>) => {
-            state.code[state.currentLanguage] = action.payload
-        }
-
+  name: "compilerSlice",
+  initialState,
+  reducers: {
+    updateCurrentLanguage: (state, action: PayloadAction<CompilerSliceStateType["currentLanguage"]>) => {
+      state.currentLanguage = action.payload
+    },
+    updateCode: (state, action: PayloadAction<string>) => {
+      state.code[state.currentLanguage] = action.payload
+    },
+    updateEntireCode: (state, action: PayloadAction<CompilerSliceStateType["code"]>) => {
+      state.code = action.payload
     }
+  }
 })
 
 export default compilerSlice.reducer
 
-export const { updateCurrentLanguage, updateCode } = compilerSlice.actions
+export const { updateCurrentLanguage, updateCode, updateEntireCode } = compilerSlice.actions

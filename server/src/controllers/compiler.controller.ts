@@ -14,4 +14,24 @@ const saveCode = async (req: Request, res: Response) => {
         }) as any;
     }
 };
-export { saveCode }
+
+
+const getCode = async (req: Request, res: Response) => {
+    const { id } = req.params
+    try {
+        const existingCode = await CodeModel.findById(id)
+        if (!existingCode) {
+            return res.status(404).json({
+                message: "Code not found"
+            })
+        }
+        return res.status(200).json({
+            code: existingCode.code
+        })
+    } catch (error) {
+        return res.status(500).json({
+            message: "Something went wrong while fetching code"
+        }) as any;
+    }
+}
+export { saveCode, getCode }

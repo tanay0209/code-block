@@ -1,4 +1,4 @@
-import { Loader2, SaveIcon, Share2Icon } from 'lucide-react'
+import { Clipboard, Code2, Loader2, SaveIcon, Share2Icon } from 'lucide-react'
 import {
     Select,
     SelectContent,
@@ -14,8 +14,9 @@ import { updateCurrentLanguage } from '@/redux/slices/compilerSlice'
 import { RootState } from '@/redux/store'
 import { CompilerSliceStateType } from '@/Types'
 import { toast } from 'sonner'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useState } from 'react'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog'
 
 function EditorHelper() {
     const dispatch = useDispatch()
@@ -23,6 +24,8 @@ function EditorHelper() {
     const code = useSelector((state: RootState) => state.compilerSlice.code)
     const navigator = useNavigate()
     const [saving, setSaving] = useState(false)
+    const { id } = useParams()
+
 
     const handleSave = async () => {
         setSaving(true)
@@ -45,6 +48,11 @@ function EditorHelper() {
         }
     }
 
+    const copyToClipboard = () => {
+        window.navigator.clipboard.writeText(window.location.href)
+        toast.success("Link copied successfully")
+    }
+
 
     return (
         <div className='h-[50px] w-full flex justify-between p-2 bg-black text-white'>
@@ -54,7 +62,37 @@ function EditorHelper() {
                     onClick={handleSave}
                     variant="ghost"
                     size='icon'>{saving ? <Loader2 className=' animate-spin' /> : <SaveIcon />}</Button>
-                <Button variant="ghost" size='icon'><Share2Icon /></Button>
+                {id && <Dialog>
+                    <DialogTrigger>
+                        <Share2Icon
+                            className='hover:bg-accent p-2 rounded-md hover:text-accent-foreground'
+                            size={40} />
+                    </DialogTrigger>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle className='flex items-center gap-2 justify-center'><Code2 />Share your code</DialogTitle>
+                            <DialogDescription />
+                            <div>
+                                <div className='flex w-full items-center gap-2 my-2'>
+                                    <input
+                                        disabled
+                                        value={window.location.href}
+                                        type="text"
+                                        className='bg-slate-700 w-full rounded text-gray-300 p-2' />
+                                    <Button variant="ghost" size="icon">
+                                        <Clipboard
+                                            className='cursor-pointer'
+                                            onClick={copyToClipboard}
+                                        />
+                                    </Button>
+                                </div>
+                                Share this url with your friend
+                            </div>
+                        </DialogHeader>
+                    </DialogContent>
+                </Dialog>}
+
+
             </div>
             <div className='flex items-center justify-center gap-2'>
                 <small>Language:</small>
