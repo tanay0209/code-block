@@ -1,40 +1,44 @@
 import CodeEditor from "@/components/CodeEditor"
 import CodeView from "@/components/CodeView"
 import EditorHelper from "@/components/EditorHelper"
+import Loader from "@/components/Loader"
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable"
+import { handleError } from "@/lib/utils"
+import { useGetCodeMutation } from "@/redux/slices/apiSlice"
 import { updateEntireCode } from "@/redux/slices/compilerSlice"
-import axios from "axios"
 import { useEffect } from "react"
 import { useDispatch } from "react-redux"
 import { useNavigate, useParams } from "react-router-dom"
-import { toast } from "sonner"
 
 function Compiler() {
     const { id } = useParams()
     const dispatch = useDispatch();
     const navigate = useNavigate()
+    const [getCode, { isLoading }] = useGetCodeMutation()
+
     const fetchCode = async () => {
         try {
-            const response = await axios.get(`http://localhost:3000/compiler/get-code/${id}`)
-            if (response.status != 200) {
-                toast.error(response.data.message)
-                navigate("/compiler")
-                return
-            }
-            dispatch(updateEntireCode(response.data.code))
-        } catch (error) {
-            console.log("Error while fetching", error);
+            const response = await getCode(id!).unwrap()
+            dispatch(updateEntireCode(response.code))
+        } catch (error: any) {
+            handleError(error)
             navigate("/compiler")
-            toast.error("Incorrect URL, switched to default editor")
         }
     }
-
 
     useEffect(() => {
         if (id) {
             fetchCode()
         }
     }, [id])
+
+    {
+        isLoading &&
+            <div className="w-full h-[calc(100dvh-60px)] flex items-center justify-center bg-black">
+                <Loader />
+            </div>
+    }
+
     return (
         <ResizablePanelGroup
             direction="horizontal"

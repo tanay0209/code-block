@@ -1,8 +1,14 @@
 import { Response, Request, json } from "express";
 import CodeModel from "../models/code.model";
+import { CodeType } from "../types/CompilerTypes";
 
 const saveCode = async (req: Request, res: Response) => {
-    const { code } = req.body
+    const code: CodeType = req.body
+    if (code.html === '' && code.css === '' && code.javascript === '') {
+        return res.status(400).json({
+            message: "Code cannot be empty"
+        }) as any
+    }
     try {
         const newCode = await CodeModel.create({
             code: code

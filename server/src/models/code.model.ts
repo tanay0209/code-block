@@ -1,4 +1,4 @@
-import mongoose, { Mongoose } from "mongoose";
+import mongoose from "mongoose";
 
 
 interface ICodeSchema {
@@ -18,6 +18,6 @@ const CodeSchema = new mongoose.Schema<ICodeSchema>({
 }, { timestamps: true })
 
 
-const CodeModel = (mongoose.models.CodeSchema as mongoose.Model<ICodeSchema>) || mongoose.model<ICodeSchema>("CodeSchema", CodeSchema)
+const CodeModel = (mongoose.models.Code as mongoose.Model<ICodeSchema>) || mongoose.model<ICodeSchema>("Code", CodeSchema)
 
 export default CodeModel

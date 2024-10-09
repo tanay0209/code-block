@@ -1,7 +1,6 @@
-import { CompilerSliceStateType } from "@/Types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-const initialState: CompilerSliceStateType = {
+const initialState: ICompilerSliceState = {
   code: {
     html:
       `<div class="container">
@@ -54,13 +53,13 @@ const compilerSlice = createSlice({
   name: "compilerSlice",
   initialState,
   reducers: {
-    updateCurrentLanguage: (state, action: PayloadAction<CompilerSliceStateType["currentLanguage"]>) => {
+    updateCurrentLanguage: (state, action: PayloadAction<ICompilerSliceState["currentLanguage"]>) => {
       state.currentLanguage = action.payload
     },
     updateCode: (state, action: PayloadAction<string>) => {
       state.code[state.currentLanguage] = action.payload
     },
-    updateEntireCode: (state, action: PayloadAction<CompilerSliceStateType["code"]>) => {
+    updateEntireCode: (state, action: PayloadAction<ICodeStructure>) => {
       state.code = action.payload
     }
   }
