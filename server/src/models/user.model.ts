@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import CodeModel from "./code.model";
+import { CodeModel } from "./code.model";
 
 interface IUserSchema {
     email: string,
@@ -9,7 +9,7 @@ interface IUserSchema {
     code: mongoose.Types.ObjectId[]
 }
 
-const UserSchema = new mongoose.Schema<IUserSchema>({
+const UserSchema: mongoose.Schema = new mongoose.Schema<IUserSchema>({
     email: {
         type: String,
         required: true,
@@ -40,6 +40,4 @@ const UserSchema = new mongoose.Schema<IUserSchema>({
 }, { timestamps: true })
 
 
-const UserModel = (mongoose.models.User as mongoose.Model<IUserSchema>) || (mongoose.model<IUserSchema>("User", UserSchema))
-
-export default UserModel
+export const UserModel = (mongoose.models.User as mongoose.Model<IUserSchema>) || (mongoose.model<IUserSchema>("User", UserSchema))

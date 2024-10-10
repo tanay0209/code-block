@@ -35,6 +35,11 @@ function Header() {
                         <Link to="/compiler">Compiler</Link>
                     </Button>
                 </li>
+                <li>
+                    <Button variant="secondary">
+                        <Link to="/codes">Codes</Link>
+                    </Button>
+                </li>
                 {!isLoggedIn &&
                     (<div className='flex gap-2 items-center'>
                         <li>

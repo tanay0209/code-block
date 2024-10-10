@@ -1,4 +1,4 @@
-import { Clipboard, Code2, Loader2, SaveIcon, Share2Icon } from 'lucide-react'
+import { Clipboard, Code2, Download, Loader2, SaveIcon, Share2Icon } from 'lucide-react'
 import {
     Select,
     SelectContent,
@@ -16,6 +16,8 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog'
 import { useSaveCodeMutation } from '@/redux/slices/apiSlice'
 import { handleError } from '@/lib/utils'
+import { useState } from 'react'
+
 
 function EditorHelper() {
     const dispatch = useDispatch()
@@ -24,6 +26,55 @@ function EditorHelper() {
     const navigator = useNavigate()
     const { id } = useParams()
     const [saveCode, { isLoading }] = useSaveCodeMutation()
+    const [loading, setLoading] = useState(false)
+    const handleCodeDownload = () => {
+        setLoading(true)
+        if (code.html === "" && code.css === "" && code.javascript === "") {
+            toast.error("Code files are empty")
+            return
+        }
+
+        const htmlCode = new Blob([code.html], { type: "text/html" })
+        const cssCode = new Blob([code.css], { type: "text/css" })
+        const javascriptCode = new Blob([code.javascript], { type: "text/javascript" })
+
+
+        const htmlLink = document.createElement('a')
+        const cssLink = document.createElement('a')
+        const javascriptLink = document.createElement('a')
+
+        htmlLink.href = URL.createObjectURL(htmlCode)
+        htmlLink.download = "index.html"
+        document.body.appendChild(htmlLink)
+
+
+        cssLink.href = URL.createObjectURL(cssCode)
+        cssLink.download = "style.css"
+        document.body.appendChild(cssLink)
+
+
+        javascriptLink.href = URL.createObjectURL(javascriptCode)
+        javascriptLink.download = "script.js"
+        document.body.appendChild(javascriptLink)
+
+
+        if (code.html !== "") {
+            htmlLink.click()
+        }
+
+        if (code.css !== "") {
+            cssLink.click()
+        }
+        if (code.javascript !== "") {
+            javascriptLink.click()
+        }
+
+        document.body.removeChild(htmlLink)
+        document.body.removeChild(cssLink)
+        document.body.removeChild(javascriptLink)
+        setLoading(false)
+        toast.success("Code downloaded successfully")
+    }
 
     const handleSave = async () => {
         try {
@@ -49,6 +100,11 @@ function EditorHelper() {
                     onClick={handleSave}
                     variant="ghost"
                     size='icon'>{isLoading ? <Loader2 className=' animate-spin' /> : <SaveIcon />}</Button>
+                <Button
+                    disabled={loading}
+                    onClick={handleCodeDownload}
+                    variant="ghost"
+                    size='icon'>{loading ? <Loader2 className=' animate-spin' /> : <Download />}</Button>
                 {id && <Dialog>
                     <DialogTrigger>
                         <Share2Icon

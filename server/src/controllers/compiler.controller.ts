@@ -1,5 +1,5 @@
 import { Response, Request, json } from "express";
-import CodeModel from "../models/code.model";
+import { CodeModel } from "../models/code.model";
 import { CodeType } from "../types/CompilerTypes";
 
 const saveCode = async (req: Request, res: Response) => {

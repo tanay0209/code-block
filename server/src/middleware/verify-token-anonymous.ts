@@ -13,14 +13,14 @@ export const verifyTokenAnonymous = async (
     const token = req.cookies.token;
 
     if (!token) {
-        return next();
+        return next() as any;
     }
     jwt.verify(
         token,
         process.env.JWT_KEY!,
         (err: JsonWebTokenError | null, data: any) => {
             if (err) {
-                return res.status(401).send({ message: "You are unauthorized." });
+                return res.status(401).send({ message: "You are unauthorized." }) as any;
             }
             req._id = data._id;
             next();
