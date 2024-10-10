@@ -7,7 +7,6 @@ import { handleError } from '@/lib/utils'
 import { useLogoutMutation } from '@/redux/slices/apiSlice'
 import { updateCurrentUser, updateIsLoggedIn } from '@/redux/slices/appSlice'
 import { Loader2 } from 'lucide-react'
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 function Header() {
     const isLoggedIn = useSelector((state: RootState) => state.appSlice.isLoggedIn)
     const currentUser = useSelector((state: RootState) => state.appSlice.currentUser)
@@ -58,7 +57,7 @@ function Header() {
                             </Button>
                         </li>
                         <li className=''>
-                            <div className='h-full cursor-pointer items-center flex justify-center font-bold rounded-full bg-white text-black w-10'>{currentUser.username?.slice(0, 2)}</div>
+                            <div className='h-full capitalize cursor-pointer items-center flex justify-center font-bold rounded-full bg-white text-black w-10'>{currentUser.username?.slice(0, 2)}</div>
                         </li>
                     </>
                 )}

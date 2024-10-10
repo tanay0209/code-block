@@ -5,7 +5,7 @@ export interface AuthRequest extends Request {
     _id?: string;
 }
 
-export const verifyToken = async (
+const verifyToken = async (
     req: AuthRequest,
     res: Response,
     next: NextFunction
@@ -13,17 +13,19 @@ export const verifyToken = async (
     const token = req.cookies.token;
 
     if (!token) {
-        return res.status(403).json({ message: "You are unauthorized." });
+        return res.status(403).json({ message: "You are unauthorized." }) as any
     }
     jwt.verify(
         token,
         process.env.JWT_KEY!,
         (err: JsonWebTokenError | null, data: any) => {
             if (err) {
-                return res.status(403).json({ message: "You are unauthorized." });
+                return res.status(403).json({ message: "You are unauthorized." }) as any;
             }
             req._id = data._id;
             next();
         }
     );
 };
+
+export { verifyToken }

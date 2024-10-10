@@ -25,10 +25,15 @@ interface IUserInfo {
     username: string,
     email: string,
     picture: string,
-    codes: ICodeStructure[]
+    codes?: ICodeStructure[]
 }
 
 interface ILoginCredentials {
     userId: string,
+    password: string
+}
+interface ISignupCredentials {
+    username: string,
+    email: string
     password: string
 }

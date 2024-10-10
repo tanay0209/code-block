@@ -4,7 +4,11 @@ import { useForm } from "react-hook-form"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage, Form } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+import { useSignupMutation } from "@/redux/slices/apiSlice"
+import { handleError } from "@/lib/utils"
+import { useDispatch } from "react-redux"
+import { updateCurrentUser, updateIsLoggedIn } from "@/redux/slices/appSlice"
 
 
 const LoginFormSchema = z.object({
@@ -12,7 +16,12 @@ const LoginFormSchema = z.object({
     password: z.string(),
     email: z.string().email()
 })
+
+
 function Signup() {
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const [signup, { isLoading }] = useSignupMutation()
     const form = useForm<z.infer<typeof LoginFormSchema>>({
         resolver: zodResolver(LoginFormSchema),
         defaultValues: {
@@ -22,8 +31,15 @@ function Signup() {
         }
     })
 
-    const onSubmit = (values: z.infer<typeof LoginFormSchema>) => {
-        console.log(values);
+    const onSubmit = async (values: z.infer<typeof LoginFormSchema>) => {
+        try {
+            const response = await signup(values).unwrap()
+            dispatch(updateCurrentUser(response))
+            dispatch(updateIsLoggedIn(true))
+            navigate("/")
+        } catch (error) {
+            handleError(error)
+        }
 
     }
     return (
@@ -39,6 +55,7 @@ function Signup() {
                                 <FormLabel>Email</FormLabel>
                                 <FormControl>
                                     <Input
+                                        required
                                         className="w-full active:border-none" placeholder="Email" {...field} />
                                 </FormControl>
                                 <FormMessage />
@@ -53,6 +70,7 @@ function Signup() {
                                 <FormLabel>Username</FormLabel>
                                 <FormControl>
                                     <Input
+                                        required
                                         className="w-full active:border-none" placeholder="Username" {...field} />
                                 </FormControl>
                                 <FormMessage />
@@ -66,13 +84,20 @@ function Signup() {
                             <FormItem>
                                 <FormLabel>Password</FormLabel>
                                 <FormControl>
-                                    <Input className="w-full" placeholder="Password" type='password' {...field} />
+                                    <Input
+                                        required
+                                        className="w-full" placeholder="Password" type='password' {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
-                    <Button className="hover:text-white hover:bg-blue-500" type='submit'>Submit</Button>
+                    <Button
+                        className="hover:text-white hover:bg-blue-500"
+                        disabled={isLoading}
+                        type='submit'
+                    >Submit
+                    </Button>
                     <span className="text-center">Already have an account? <Link className="hover:underline" to="/login">Login</Link></span>
                 </form>
             </Form>

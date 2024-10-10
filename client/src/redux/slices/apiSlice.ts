@@ -27,13 +27,33 @@ export const api = createApi({
                 body: body
             })
         }),
+        signup: builder.mutation<IUserInfo, ISignupCredentials>({
+            query: (body) => ({
+                url: "/user/signup",
+                method: "POST",
+                body: body
+            })
+        }),
         logout: builder.mutation<void, void>({
             query: () => ({
                 url: "/user/logout",
                 method: "GET"
             })
+        }),
+        getUserDetails: builder.query<IUserInfo, void>({
+            query: () => ({
+                url: "/user/user-details",
+                cache: "no-store"
+            })
         })
     })
 })
 
-export const { useSaveCodeMutation, useGetCodeMutation, useLoginMutation, useLogoutMutation } = api
+export const {
+    useSaveCodeMutation,
+    useGetCodeMutation,
+    useLoginMutation,
+    useLogoutMutation,
+    useGetUserDetailsQuery,
+    useSignupMutation
+} = api
