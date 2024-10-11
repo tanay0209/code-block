@@ -8,8 +8,9 @@ interface ICodeSchema {
         css: string,
         javascript: string
     },
-    user: mongoose.Schema.Types.ObjectId,
-    username: string
+    user: mongoose.Types.ObjectId,
+    username: string,
+    title: string
 }
 
 const CodeSchema: mongoose.Schema = new mongoose.Schema<ICodeSchema>({
@@ -22,7 +23,11 @@ const CodeSchema: mongoose.Schema = new mongoose.Schema<ICodeSchema>({
         type: mongoose.Schema.Types.ObjectId,
         ref: UserModel
     },
-    username: String
+    username: String,
+    title: {
+        type: String,
+        required: true
+    }
 }, { timestamps: true })
 
 

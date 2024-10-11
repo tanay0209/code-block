@@ -7,7 +7,7 @@ export const api = createApi({
         credentials: "include"
     }),
     endpoints: (builder) => ({
-        saveCode: builder.mutation<{ id: string }, ICodeStructure>({
+        saveCode: builder.mutation<{ id: string }, { code: ICodeStructure, title: string }>({
             query: (code) => ({
                 url: "/compiler/save",
                 method: "POST",

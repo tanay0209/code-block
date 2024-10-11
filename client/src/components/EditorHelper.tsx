@@ -17,6 +17,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { useSaveCodeMutation } from '@/redux/slices/apiSlice'
 import { handleError } from '@/lib/utils'
 import { useState } from 'react'
+import { Input } from './ui/input'
 
 
 function EditorHelper() {
@@ -27,6 +28,8 @@ function EditorHelper() {
     const { id } = useParams()
     const [saveCode, { isLoading }] = useSaveCodeMutation()
     const [loading, setLoading] = useState(false)
+    const [title, setTitle] = useState<string>("My Code");
+
     const handleCodeDownload = () => {
         setLoading(true)
         if (code.html === "" && code.css === "" && code.javascript === "") {
@@ -77,8 +80,9 @@ function EditorHelper() {
     }
 
     const handleSave = async () => {
+        const body = { code: code, title: title }
         try {
-            const response = await saveCode(code).unwrap()
+            const response = await saveCode(body).unwrap()
             toast.success("Code saved successfully")
             navigator(`/compiler/${response.id}`, { replace: true })
         } catch (error: any) {
@@ -95,11 +99,33 @@ function EditorHelper() {
     return (
         <div className='h-[50px] w-full flex justify-between p-2 bg-black text-white'>
             <div className='flex gap-2 items-center h-full'>
-                <Button
-                    disabled={isLoading}
-                    onClick={handleSave}
-                    variant="ghost"
-                    size='icon'>{isLoading ? <Loader2 className=' animate-spin' /> : <SaveIcon />}</Button>
+                <Dialog>
+                    <DialogTrigger>
+                        <Button
+                            variant="ghost"
+                            size='icon'><SaveIcon /></Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle className='flex items-center gap-2 justify-center'><Code2 />Give a title to your code</DialogTitle>
+                            <DialogDescription />
+                            <div className='flex w-full items-center gap-2 my-2'>
+                                <Input
+                                    value={title}
+                                    onChange={(e) => setTitle(e.target.value)}
+                                    required
+                                    placeholder='Enter your code title'
+                                />
+                                <Button
+                                    onClick={handleSave}
+                                    variant="ghost" size="icon">{isLoading ? <><Loader2 /></> :
+                                        <><SaveIcon />
+                                        </>}
+                                </Button>
+                            </div>
+                        </DialogHeader>
+                    </DialogContent>
+                </Dialog>
                 <Button
                     disabled={loading}
                     onClick={handleCodeDownload}
