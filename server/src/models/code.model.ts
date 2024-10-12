@@ -21,7 +21,7 @@ const CodeSchema: mongoose.Schema = new mongoose.Schema<ICodeSchema>({
     },
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: UserModel
+        ref: "User"
     },
     username: String,
     title: {

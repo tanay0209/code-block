@@ -100,10 +100,11 @@ function EditorHelper() {
         <div className='h-[50px] w-full flex justify-between p-2 bg-black text-white'>
             <div className='flex gap-2 items-center h-full'>
                 <Dialog>
-                    <DialogTrigger>
-                        <Button
-                            variant="ghost"
-                            size='icon'><SaveIcon /></Button>
+                    <DialogTrigger asChild>
+                        <Button size="icon" variant="ghost">
+                            <SaveIcon />
+
+                        </Button>
                     </DialogTrigger>
                     <DialogContent>
                         <DialogHeader>

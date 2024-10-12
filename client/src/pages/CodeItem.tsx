@@ -1,8 +1,80 @@
-import React from 'react'
+import { Button } from '@/components/ui/button'
+import { Separator } from '@/components/ui/separator'
+import { Trash2 } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import { useDeleteCodeMutation } from '@/redux/slices/apiSlice'
+import { handleError } from '@/lib/utils'
+import { toast } from 'sonner'
 
-function CodeItem() {
+interface CodeItemProps {
+    code: ICodeStructure,
+    title: string,
+    id: string
+}
+
+function CodeItem({ code, title, id }: CodeItemProps) {
+    const [deleteCode, { isLoading }] = useDeleteCodeMutation()
+
+    const handleDelete = async () => {
+        try {
+            const response = await deleteCode(id).unwrap()
+            console.log(response);
+
+            toast.success("Code deleted")
+        } catch (error) {
+            handleError(error)
+        }
+    }
+
     return (
-        <div className='border-2 p-3 rounded'>CodeItem</div>
+        <div
+            className='p-3 rounded bg-slate-900 flex flex-col gap-2'>
+            <p className='font-mono font-bold text-lg'>{title}</p>
+            <Separator />
+            <div className='flex gap-2 items-center'>
+                <Link
+                    target='_blank'
+                    to={`/compiler/${id}`}>
+                    <Button
+                        variant="secondary"
+                    >
+                        Open Code
+                    </Button>
+                </Link>
+                <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                        <Button size="icon" variant="ghost">
+                            <Trash2 />
+                        </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                This action cannot be undone.
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction
+                                disabled={isLoading}
+                                onClick={handleDelete}>Confirm</AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
+            </div>
+        </div>
     )
 }
 

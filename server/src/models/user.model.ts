@@ -34,7 +34,7 @@ const UserSchema: mongoose.Schema = new mongoose.Schema<IUserSchema>({
     code: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: CodeModel
+            ref: "Code"
         }
     ]
 }, { timestamps: true })
