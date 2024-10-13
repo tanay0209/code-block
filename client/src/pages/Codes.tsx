@@ -12,7 +12,7 @@ function Codes() {
                         codeSection={true}
                         title={currCode.title} author={currCode.username} id={currCode._id} />)}
                 </div>
-            </> : <p className='font-mono text-center text-3xl'>No codes to see, try again later!</p>}
+            </> : <p className='font-mono text-center text-3xl py-4'>No codes available, try again later!</p>}
         </>
     )
 }

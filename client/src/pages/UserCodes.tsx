@@ -13,7 +13,7 @@ function UserCodes() {
                         codeSection={false}
                         title={currCode.title} id={currCode._id} />)}
                 </div>
-            </> : <p className='font-mono text-center text-3xl'>You dont have any saved codes</p>}
+            </> : <p className='font-mono text-center text-3xl py-3'>You dont have any saved codes</p>}
         </>
     )
 }
