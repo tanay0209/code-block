@@ -1,19 +1,18 @@
-import { Route, Routes } from "react-router-dom"
 import Header from "./components/Header"
-import Home from "./pages/Home"
-import Compiler from "./pages/Compiler"
 import { ThemeProvider } from "./components/theme-provider"
 import { Toaster } from "sonner"
-import Signup from "./pages/Signup"
-import Login from "./pages/Login"
 import { useGetUserDetailsQuery } from "./redux/slices/apiSlice"
 import { useEffect } from "react"
 import { useDispatch } from "react-redux"
-import { updateCurrentUser, updateIsLoggedIn } from "./redux/slices/appSlice"
+import { updateCurrentUser, updateIsLoggedIn, updateWindowWidth } from "./redux/slices/appSlice"
 import Router from "./components/Router"
+
+
 function App() {
+
   const { data, error } = useGetUserDetailsQuery()
   const dispatch = useDispatch()
+
   useEffect(() => {
     if (data) {
       dispatch(updateCurrentUser(data))
@@ -22,7 +21,18 @@ function App() {
       dispatch(updateCurrentUser({}))
       dispatch(updateIsLoggedIn(false))
     }
-  }, [data, error])
+  }, [data, error, dispatch])
+
+  useEffect(() => {
+    const handleResize = () => {
+      dispatch(updateWindowWidth(window.innerWidth))
+    }
+    window.addEventListener("resize", handleResize)
+    return () => {
+      window.removeEventListener("resize", handleResize)
+    }
+  }, [dispatch])
+
   return (
     <>
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">

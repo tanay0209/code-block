@@ -43,9 +43,9 @@ function Signup() {
 
     }
     return (
-        <div className='w-full h-[calc(100dvh-60px)] flex flex-col items-center justify-center'>
+        <div className='w-full h-[calc(100dvh-60px)] flex items-center justify-center'>
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4 flex flex-col max-w-3xl w-1/3 backdrop-blur-md p-4 shadow-sm shadow-white rounded-md'>
+                <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4 flex flex-col p-2 mx-3 w-full sm:w-1/2 backdrop-blur-md  shadow-sm shadow-white rounded-md'>
                     <h3 className="text-3xl text-center font-bold">Signup</h3>
                     <FormField
                         control={form.control}
@@ -100,8 +100,8 @@ function Signup() {
                     </Button>
                     <span className="text-center">Already have an account? <Link className="hover:underline" to="/login">Login</Link></span>
                 </form>
-            </Form>
-        </div>
+            </Form >
+        </div >
     )
 }
 

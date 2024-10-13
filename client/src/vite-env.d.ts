@@ -7,7 +7,8 @@ interface IAppSliceState {
         picture?: string,
         codes?: ICodeStructure[]
     },
-    isLoggedIn: boolean
+    isLoggedIn: boolean,
+    windowWidth: number
 }
 
 interface ICodeStructure {

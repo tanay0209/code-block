@@ -15,11 +15,12 @@ function CodeEditor() {
 
     const onChange = React.useCallback((value: string) => {
         dispatch(updateCode(value))
-    }, []);
+    }, [dispatch]);
 
 
     return <CodeMirror
         value={code[currentLanguage]}
+        className='code-editor [&>.cm-editor]:text-[10px] md:[&>.cm-editor]:text-[12px]'
         height="calc(100vh - 60px - 50px)"
         extensions={[loadLanguage(currentLanguage)!]}
         onChange={onChange}

@@ -6,8 +6,10 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/componen
 import { handleError } from "@/lib/utils"
 import { useGetCodeMutation } from "@/redux/slices/apiSlice"
 import { updateCodeOwner, updateEntireCode } from "@/redux/slices/compilerSlice"
+import { RootState } from "@/redux/store"
+
 import { useEffect } from "react"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { useNavigate, useParams } from "react-router-dom"
 
 function Compiler() {
@@ -15,7 +17,7 @@ function Compiler() {
     const dispatch = useDispatch();
     const navigate = useNavigate()
     const [getCode, { isLoading }] = useGetCodeMutation()
-
+    const windowWidth = useSelector((state: RootState) => state.appSlice.windowWidth)
     const fetchCode = async () => {
         try {
             const response = await getCode(id!).unwrap()
@@ -42,8 +44,8 @@ function Compiler() {
 
     return (
         <ResizablePanelGroup
-            direction="horizontal"
-            className="w-full"
+            direction={windowWidth > 640 ? "horizontal" : "vertical"}
+            className="w-full !h-[calc(100dvh-60px)]"
         >
             <ResizablePanel defaultSize={50} className="h-[calc(100dvh-60px)] min-w-[350px]" >
                 <EditorHelper />

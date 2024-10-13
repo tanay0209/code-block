@@ -43,9 +43,8 @@ function Login() {
 
     return (
         <div className='w-full h-[calc(100dvh-60px)] flex items-center justify-center'>
-
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onLogin)} className='space-y-4 flex flex-col max-w-3xl w-1/3 backdrop-blur-md p-4 shadow-sm shadow-white rounded-md'>
+                <form onSubmit={form.handleSubmit(onLogin)} className='space-y-4 flex flex-col p-2 mx-3 w-full sm:w-1/2 backdrop-blur-md  shadow-sm shadow-white rounded-md'>
                     <h3 className="text-3xl text-center font-bold">Login</h3>
                     <FormField
                         control={form.control}

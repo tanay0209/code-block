@@ -16,8 +16,8 @@ function CodeView() {
     `
     const iframeCode = `data:text/html;charset=utf-8,${encodeURIComponent(combinedCode)}`
     return (
-        <div className='w-full bg-white h-[calc(100dvh-60px)]'>
-            <iframe className='w-full h-full' src={iframeCode}></iframe>
+        <div className='w-full bg-white h-full sm:h-[calc(100dvh-60px)]'>
+            <iframe title='Compiled code' className='w-full h-full' src={iframeCode}></iframe>
         </div>
     )
 }

@@ -4,7 +4,8 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState: IAppSliceState = {
     currentUser: {},
-    isLoggedIn: false
+    isLoggedIn: false,
+    windowWidth: window.innerWidth
 }
 
 const appSlice = createSlice({
@@ -16,6 +17,9 @@ const appSlice = createSlice({
         },
         updateIsLoggedIn: (state, action: PayloadAction<IAppSliceState["isLoggedIn"]>) => {
             state.isLoggedIn = action.payload
+        },
+        updateWindowWidth: (state, action: PayloadAction<number>) => {
+            state.windowWidth = action.payload
         }
     }
 })
@@ -23,4 +27,4 @@ const appSlice = createSlice({
 
 export default appSlice.reducer
 
-export const { updateCurrentUser, updateIsLoggedIn } = appSlice.actions
+export const { updateCurrentUser, updateIsLoggedIn, updateWindowWidth } = appSlice.actions
