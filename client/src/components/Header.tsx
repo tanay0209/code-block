@@ -7,6 +7,7 @@ import { handleError } from '@/lib/utils'
 import { useLogoutMutation } from '@/redux/slices/apiSlice'
 import { updateCurrentUser, updateIsLoggedIn } from '@/redux/slices/appSlice'
 import { Loader2 } from 'lucide-react'
+import { updateCodeOwner } from '@/redux/slices/compilerSlice'
 function Header() {
     const isLoggedIn = useSelector((state: RootState) => state.appSlice.isLoggedIn)
     const currentUser = useSelector((state: RootState) => state.appSlice.currentUser)
@@ -20,6 +21,7 @@ function Header() {
             await logout().unwrap()
             dispatch(updateCurrentUser({}))
             dispatch(updateIsLoggedIn(false))
+            dispatch(updateCodeOwner(false))
             navigate("/")
         } catch (error) {
             handleError(error)
@@ -38,6 +40,11 @@ function Header() {
                 <li>
                     <Button variant="secondary">
                         <Link to="/codes">Codes</Link>
+                    </Button>
+                </li>
+                <li>
+                    <Button variant="secondary">
+                        <Link to="/user-codes">My Codes</Link>
                     </Button>
                 </li>
                 {!isLoggedIn &&

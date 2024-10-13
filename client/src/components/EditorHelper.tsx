@@ -1,4 +1,4 @@
-import { Clipboard, Code2, Download, Loader2, SaveIcon, Share2Icon } from 'lucide-react'
+import { Clipboard, Code2, Download, Loader2, PencilLine, SaveIcon, Share2Icon } from 'lucide-react'
 import {
     Select,
     SelectContent,
@@ -14,7 +14,7 @@ import { RootState } from '@/redux/store'
 import { toast } from 'sonner'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog'
-import { useSaveCodeMutation } from '@/redux/slices/apiSlice'
+import { useEditCodeMutation, useSaveCodeMutation } from '@/redux/slices/apiSlice'
 import { handleError } from '@/lib/utils'
 import { useState } from 'react'
 import { Input } from './ui/input'
@@ -23,12 +23,14 @@ import { Input } from './ui/input'
 function EditorHelper() {
     const dispatch = useDispatch()
     const currentLanguage = useSelector((state: RootState) => state.compilerSlice.currentLanguage)
+    const isOwner = useSelector((state: RootState) => state.compilerSlice.isOwner)
     const code = useSelector((state: RootState) => state.compilerSlice.code)
     const navigator = useNavigate()
     const { id } = useParams()
     const [saveCode, { isLoading }] = useSaveCodeMutation()
     const [loading, setLoading] = useState(false)
     const [title, setTitle] = useState<string>("My Code");
+    const [editCode, { isLoading: editLoading }] = useEditCodeMutation()
 
     const handleCodeDownload = () => {
         setLoading(true)
@@ -95,6 +97,18 @@ function EditorHelper() {
         toast.success("Link copied successfully")
     }
 
+    const handleEdit = async () => {
+        try {
+            if (!id) return
+            const body = { id: id, body: code }
+            await editCode(body).unwrap()
+            toast.success("Code updated succesfully")
+        } catch (error) {
+            handleError(error)
+        }
+
+    }
+
 
     return (
         <div className='h-[50px] w-full flex justify-between p-2 bg-black text-white'>
@@ -103,7 +117,6 @@ function EditorHelper() {
                     <DialogTrigger asChild>
                         <Button size="icon" variant="ghost">
                             <SaveIcon />
-
                         </Button>
                     </DialogTrigger>
                     <DialogContent>
@@ -132,35 +145,44 @@ function EditorHelper() {
                     onClick={handleCodeDownload}
                     variant="ghost"
                     size='icon'>{loading ? <Loader2 className=' animate-spin' /> : <Download />}</Button>
-                {id && <Dialog>
-                    <DialogTrigger>
-                        <Share2Icon
-                            className='hover:bg-accent p-2 rounded-md hover:text-accent-foreground'
-                            size={40} />
-                    </DialogTrigger>
-                    <DialogContent>
-                        <DialogHeader>
-                            <DialogTitle className='flex items-center gap-2 justify-center'><Code2 />Share your code</DialogTitle>
-                            <DialogDescription />
-                            <div>
-                                <div className='flex w-full items-center gap-2 my-2'>
-                                    <input
-                                        disabled
-                                        value={window.location.href}
-                                        type="text"
-                                        className='bg-slate-700 w-full rounded text-gray-300 p-2' />
-                                    <Button variant="ghost" size="icon">
-                                        <Clipboard
-                                            className='cursor-pointer'
-                                            onClick={copyToClipboard}
-                                        />
-                                    </Button>
-                                </div>
-                                Share this url with your friend
-                            </div>
-                        </DialogHeader>
-                    </DialogContent>
-                </Dialog>}
+                {id &&
+                    <>
+                        {isOwner &&
+                            <Button disabled={editLoading} onClick={handleEdit} size="icon" variant="ghost">
+                                <PencilLine />
+                            </Button>
+                        }
+                        <Dialog>
+                            <DialogTrigger>
+                                <Share2Icon
+                                    className='hover:bg-accent p-2 rounded-md hover:text-accent-foreground'
+                                    size={40} />
+                            </DialogTrigger>
+                            <DialogContent>
+                                <DialogHeader>
+                                    <DialogTitle className='flex items-center gap-2 justify-center'><Code2 />Share your code</DialogTitle>
+                                    <DialogDescription />
+                                    <div>
+                                        <div className='flex w-full items-center gap-2 my-2'>
+                                            <input
+                                                disabled
+                                                value={window.location.href}
+                                                type="text"
+                                                className='bg-slate-700 w-full rounded text-gray-300 p-2' />
+                                            <Button variant="ghost" size="icon">
+                                                <Clipboard
+                                                    className='cursor-pointer'
+                                                    onClick={copyToClipboard}
+                                                />
+                                            </Button>
+                                        </div>
+                                        Share this url with your friend
+                                    </div>
+                                </DialogHeader>
+                            </DialogContent>
+                        </Dialog>
+                    </>
+                }
 
 
             </div>

@@ -47,6 +47,7 @@ button:hover {
         `
   },
   currentLanguage: "html",
+  isOwner: false
 }
 
 const compilerSlice = createSlice({
@@ -61,10 +62,13 @@ const compilerSlice = createSlice({
     },
     updateEntireCode: (state, action: PayloadAction<ICodeStructure>) => {
       state.code = action.payload
+    },
+    updateCodeOwner: (state, action: PayloadAction<boolean>) => {
+      state.isOwner = action.payload
     }
   }
 })
 
 export default compilerSlice.reducer
 
-export const { updateCurrentLanguage, updateCode, updateEntireCode } = compilerSlice.actions
+export const { updateCurrentLanguage, updateCode, updateEntireCode, updateCodeOwner } = compilerSlice.actions

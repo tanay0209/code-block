@@ -19,6 +19,7 @@ interface ICodeStructure {
 interface ICompilerSliceState {
     code: ICodeStructure
     currentLanguage: "html" | "css" | "javascript",
+    isOwner: boolean
 }
 
 interface IUserInfo {

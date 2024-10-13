@@ -51,8 +51,10 @@ const saveCode = async (req: AuthRequest, res: Response) => {
     }
 };
 
-const getCode = async (req: Request, res: Response) => {
+const getCode = async (req: AuthRequest, res: Response) => {
+    const userId = req._id
     const { id } = req.params
+    let isCodeOwner = false;
     try {
         const existingCode = await CodeModel.findById(id)
         if (!existingCode) {
@@ -60,8 +62,15 @@ const getCode = async (req: Request, res: Response) => {
                 message: "Code not found"
             })
         }
+        const updatedUserId = new mongoose.Types.ObjectId(userId);
+
+        if (existingCode.user.equals(updatedUserId)) {
+            isCodeOwner = true;
+        }
+
         return res.status(200).json({
-            code: existingCode.code
+            code: existingCode.code,
+            isOwner: isCodeOwner
         })
     } catch (error) {
         return res.status(500).json({
@@ -135,9 +144,29 @@ const deleteCode = async (req: AuthRequest, res: Response) => {
     }
 }
 
-
-const updateCode = (req: AuthRequest, res: Response) => {
+const updateCode = async (req: AuthRequest, res: Response) => {
+    const userId = req._id
     try {
+        const { id } = req.params
+        const updatedCode = req.body
+        const code = await CodeModel.findById(id)
+        if (!code) {
+            return res.status(404).json({
+                message: "Code not found"
+            }) as any
+        }
+        const updatedUserId = new mongoose.Types.ObjectId(userId)
+        if (!updatedUserId.equals(userId)) {
+            return res.status(403).json({
+                message: "You dont have permission to update this code."
+            }) as any
+        }
+        const editedCode = await CodeModel.findByIdAndUpdate(id, {
+            code: updatedCode
+        })
+        return res.status(200).json({
+            message: "Post updated successfully"
+        })
 
     } catch (error) {
         return res.status(500).json({
@@ -146,4 +175,19 @@ const updateCode = (req: AuthRequest, res: Response) => {
     }
 }
 
-export { saveCode, getCode, getUserCodes, deleteCode, updateCode }
+const getAllCodes = async (req: Request, res: Response) => {
+    try {
+        const codes = await CodeModel.find().sort({ createdAt: -1 })
+
+        return res.status(200).json({
+            codes: codes
+        }) as any
+
+    } catch (error) {
+        res.status(500).json({
+            message: "Something went wrong while fetching codes"
+        }) as any
+    }
+}
+
+export { saveCode, getCode, getUserCodes, deleteCode, updateCode, getAllCodes }

@@ -5,7 +5,7 @@ import Loader from "@/components/Loader"
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable"
 import { handleError } from "@/lib/utils"
 import { useGetCodeMutation } from "@/redux/slices/apiSlice"
-import { updateEntireCode } from "@/redux/slices/compilerSlice"
+import { updateCodeOwner, updateEntireCode } from "@/redux/slices/compilerSlice"
 import { useEffect } from "react"
 import { useDispatch } from "react-redux"
 import { useNavigate, useParams } from "react-router-dom"
@@ -20,6 +20,7 @@ function Compiler() {
         try {
             const response = await getCode(id!).unwrap()
             dispatch(updateEntireCode(response.code))
+            dispatch(updateCodeOwner(response.isOwner))
         } catch (error: any) {
             handleError(error)
             navigate("/compiler")

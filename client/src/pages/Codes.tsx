@@ -1,19 +1,18 @@
-import { useGetUserCodeQuery } from '@/redux/slices/apiSlice'
-import CodeItem from './CodeItem'
-
+import { useGetAllCodesQuery } from "@/redux/slices/apiSlice"
+import CodeItem from "./CodeItem"
 
 function Codes() {
-    const { data } = useGetUserCodeQuery()
-
+    const { data } = useGetAllCodesQuery()
     return (
         <>
             {data?.codes.length !== 0 ? <>
                 <div className='p-3 grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-4'>
                     {data?.codes.map(currCode => <CodeItem
                         key={currCode._id}
-                        title={currCode.title} id={currCode._id} code={currCode.code} />)}
+                        codeSection={true}
+                        title={currCode.title} author={currCode.username} id={currCode._id} />)}
                 </div>
-            </> : <p className='font-mono text-center text-3xl'>You dont have any saved codes</p>}
+            </> : <p className='font-mono text-center text-3xl'>No codes to see, try again later!</p>}
         </>
     )
 }

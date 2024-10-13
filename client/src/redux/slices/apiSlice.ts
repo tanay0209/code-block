@@ -1,13 +1,12 @@
 
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
-import { url } from "inspector"
 
 export const api = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: "http://localhost:3000",
         credentials: "include"
     }),
-    tagTypes: ["user-codes"],
+    tagTypes: ["user-codes", "all-codes"],
     endpoints: (builder) => ({
         saveCode: builder.mutation<{ id: string }, { code: ICodeStructure, title: string }>({
             query: (code) => ({
@@ -15,9 +14,9 @@ export const api = createApi({
                 method: "POST",
                 body: code
             }),
-            invalidatesTags: ["user-codes"]
+            invalidatesTags: ["user-codes", "all-codes"]
         }),
-        getCode: builder.mutation<{ code: ICodeStructure }, string>({
+        getCode: builder.mutation<{ code: ICodeStructure, isOwner: boolean }, string>({
             query: (id) => ({
                 url: `/compiler/get-code/${id}`,
                 method: "GET"
@@ -49,7 +48,7 @@ export const api = createApi({
                 cache: "no-store"
             })
         }),
-        getUserCode: builder.query<{ codes: Array<{ code: ICodeStructure, title: string, _id: string }> }, void>({
+        getUserCode: builder.query<{ codes: Array<{ title: string, _id: string }> }, void>({
             query: () => "/user/my-codes",
             providesTags: ["user-codes"]
         }),
@@ -58,7 +57,22 @@ export const api = createApi({
                 url: `/compiler/delete-code/${id}`,
                 method: "DELETE"
             }),
+            invalidatesTags: ["user-codes", "all-codes"]
+        }),
+        editCode: builder.mutation<void, { id: string, body: ICodeStructure }>({
+            query: ({ id, body }) => ({
+                url: `/compiler/update-code/${id}`,
+                method: "PUT",
+                body: body
+            }),
             invalidatesTags: ["user-codes"]
+        }),
+        getAllCodes: builder.query<{ codes: Array<{ title: string, username: string, _id: string }> }, void>({
+            query: () => ({
+                url: "/compiler/get-all-codes",
+                cache: "no-store"
+            }),
+            providesTags: ["all-codes"]
         })
     })
 })
@@ -71,5 +85,7 @@ export const {
     useGetUserDetailsQuery,
     useSignupMutation,
     useGetUserCodeQuery,
-    useDeleteCodeMutation
+    useDeleteCodeMutation,
+    useEditCodeMutation,
+    useGetAllCodesQuery
 } = api
