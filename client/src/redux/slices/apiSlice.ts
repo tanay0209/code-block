@@ -26,7 +26,8 @@ export const api = createApi({
             query: (body) => ({
                 url: "/user/login",
                 method: "POST",
-                body: body
+                body: body,
+                credentials: "include"
             })
         }),
         signup: builder.mutation<IUserInfo, ISignupCredentials>({
