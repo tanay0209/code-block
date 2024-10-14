@@ -16,6 +16,7 @@ const PORT = process.env.PORT || 3000;
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
 app.use((0, cors_1.default)({ credentials: true, origin: process.env.CLIENT_URL }));
+app.set("trust proxy", 1);
 (0, dbConnect_1.dbConnect)();
 app.use("/compiler", compiler_route_1.default);
 app.use("/user", user_route_1.default);

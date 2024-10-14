@@ -43,7 +43,8 @@ const signup = async (req, res) => {
             path: "/",
             expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
             httpOnly: true,
-            sameSite: "lax"
+            sameSite: "none",
+            secure: true
         });
         return res.status(201).json({
             username: user.username,
@@ -90,7 +91,8 @@ const login = async (req, res) => {
         res.cookie("token", jwtToken, {
             path: "/",
             httpOnly: true,
-            sameSite: "lax",
+            sameSite: "none",
+            secure: true,
             expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
         });
         exisitingUser.password = "";
